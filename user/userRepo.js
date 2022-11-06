@@ -1,4 +1,4 @@
-const userDb = require("../db/userDb");
+const userDb = require("../db").userDb;
 const crypto = require("crypto");
 
 const createUser = async function ({ username, password, email }) {

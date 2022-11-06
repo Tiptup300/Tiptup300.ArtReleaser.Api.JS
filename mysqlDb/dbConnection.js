@@ -11,6 +11,20 @@ const create = function () {
   return connection;
 };
 
+const query = (qry, params) => {
+  return new Promise((resolve, reject) => {
+    let conn = create();
+    conn.query(qry, params ? params : [], (error, rows, fields) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(rows);
+      }
+    });
+    conn.end();
+  });
+};
+
 module.exports = {
-  create,
+  query,
 };
