@@ -1,4 +1,5 @@
 var express = require("express");
+var crypto = require("crypto");
 var router = express.Router();
 var userRepository = require("../repositories/userRepository");
 
@@ -17,11 +18,14 @@ router.post("/", function (req, res, next) {
   }
 
   let username = req.body.username.trim();
-  if (username.length < 8) {
+  if (/^[^\W_]{3,30}$/g.test(username) == false) {
     res.status(400).send({
-      error: "Username must be at least 8 characters long.",
+      error:
+        "Username must have a minimum of three characters, a maximum of 30 characters long, and cannot contain symbols.",
       field: "username",
     });
+  }
+  if (username.length < 8) {
   }
 
   let password = req.body.password;
@@ -33,7 +37,7 @@ router.post("/", function (req, res, next) {
     console.log(password);
     res.status(400).send({
       error:
-        "Password must have at a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.",
+        "Password must have a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.",
       field: "password",
     });
   }
@@ -46,18 +50,18 @@ router.post("/", function (req, res, next) {
     });
   }
 
-  let createUserRequest = {
-    username,
-    password,
-    email,
-  };
-
-  let createUserResponse;
   try {
-    createUserResponse = userRepository.createUser(createUserRequest);
+    let userId = userRepository.createUser({
+      username,
+      passwordSalt,
+      passwordHash,
+      email,
+    });
+    console.log(userId);
+    let user = userRepository.readUser({ userId });
     res.status(200).send({
       message: "User created successfully.",
-      user: createUserResponse,
+      user: user,
     });
   } catch (ex) {
     res.status(400).send({
