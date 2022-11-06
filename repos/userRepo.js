@@ -6,7 +6,7 @@ const createUser = async function ({ username, password, email }) {
     throw new Error("Cannot create user, all parameters must be completed.");
   }
 
-  if (isUsernameTaken(username)) {
+  if (await isUsernameTaken(username)) {
     throw new Error("Cannot create user, username is already taken.");
   }
 
@@ -33,7 +33,7 @@ const createUser = async function ({ username, password, email }) {
   let user = await userDb.read({ userId });
 
   return {
-    userid: user.id,
+    id: user.id,
     username: user.username,
     email: user.email,
   };

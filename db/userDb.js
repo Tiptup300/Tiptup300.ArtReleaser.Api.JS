@@ -49,7 +49,7 @@ const readAll = function () {
         FROM users
       `,
       (error, rows, fields) => {
-        if (error) {
+        if (!error) {
           resolve(rows);
         } else {
           reject(error);
