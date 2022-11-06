@@ -1,13 +1,19 @@
 const userDb = require("../db/userDb");
+const crypto = require("crypto");
 
-const createUser = function ({ username, password, email }) {
+const createUser = async function ({ username, password, email }) {
   if (!username || !password || !email) {
-    throw new Error("Cannot createUser, all parameters must be completed.");
+    throw new Error("Cannot create user, all parameters must be completed.");
+  }
+
+  if (isUsernameTaken(username)) {
+    throw new Error("Cannot create user, username is already taken.");
   }
 
   let passwordSalt = crypto
     .randomBytes(parseInt(process.env.PASSWORD_SALT_LENGTH))
     .toString("hex");
+
   let passwordHash = crypto
     .pbkdf2Sync(
       password,
@@ -18,19 +24,24 @@ const createUser = function ({ username, password, email }) {
     )
     .toString("hex");
 
-  let userId = userDb.create({
+  let userId = await userDb.create({
     username,
     passwordHash,
     passwordSalt,
     email,
   });
-  let user = userDb.read({ userId });
+  let user = await userDb.read({ userId });
 
   return {
     userid: user.id,
     username: user.username,
-    email: user,
+    email: user.email,
   };
+
+  async function isUsernameTaken(username) {
+    let users = await userDb.readAll();
+    return users.some((u) => u.username == username);
+  }
 };
 
 const readUser = function ({ userId }) {
