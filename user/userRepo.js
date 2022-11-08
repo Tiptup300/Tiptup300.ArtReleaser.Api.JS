@@ -32,6 +32,8 @@ const createUser = async function ({ username, password, email }) {
   });
   let user = await userDb.read({ userId });
 
+  console.log(`userRepo: Created new user (${user.id} - ${user.username})`);
+
   return {
     id: user.id,
     username: user.username,
