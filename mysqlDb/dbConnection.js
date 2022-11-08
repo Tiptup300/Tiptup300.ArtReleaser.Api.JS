@@ -25,7 +25,13 @@ const query = (qry, params) => {
   });
 };
 
+const close = function () {
+  connection.end();
+  console.log("Connection to mysql ended.");
+};
+
 module.exports = {
   start,
   query,
+  close,
 };
