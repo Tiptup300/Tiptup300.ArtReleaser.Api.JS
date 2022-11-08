@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 if (process.env.NODE_ENV !== "production") {
+  console.log("DEV MODE");
   require("dotenv").config();
+} else {
+  console.log("PROD MODE");
 }
 
 /**

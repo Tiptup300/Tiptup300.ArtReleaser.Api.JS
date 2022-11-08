@@ -26,7 +26,11 @@ const query = (qry, params) => {
 };
 
 const close = function () {
+  if (!connection) {
+    return;
+  }
   connection.end();
+  connection = null;
   console.log("Connection to mysql ended.");
 };
 
