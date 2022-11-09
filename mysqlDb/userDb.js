@@ -33,7 +33,7 @@ const read = async function ({ userId }) {
 const readAll = async function () {
   let result = await dbConnection.query(
     `
-        SELECT id, username, email
+        SELECT id, username, email, password_hash, password_salt
         FROM users
       `
   );

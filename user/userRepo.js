@@ -1,5 +1,5 @@
 const userDb = require("../db").userDb;
-const crypto = require("crypto");
+const auth = require("../auth");
 
 const createUser = async function ({ username, password, email }) {
   if (!username || !password || !email) {
@@ -10,19 +10,8 @@ const createUser = async function ({ username, password, email }) {
     throw new Error("Cannot create user, username is already taken.");
   }
 
-  let passwordSalt = crypto
-    .randomBytes(parseInt(process.env.PASSWORD_SALT_LENGTH))
-    .toString("hex");
-
-  let passwordHash = crypto
-    .pbkdf2Sync(
-      password,
-      passwordSalt,
-      parseInt(process.env.PASSWORD_HASH_ITERATIONS),
-      parseInt(process.env.PASSWORD_HASH_LENGTH),
-      "sha512"
-    )
-    .toString("hex");
+  let passwordSalt = auth.generateSalt();
+  let passwordHash = auth.hashPassword(password, passwordSalt);
 
   let userId = await userDb.create({
     username,
@@ -42,17 +31,10 @@ const createUser = async function ({ username, password, email }) {
 
   async function isUsernameTaken(username) {
     let users = await userDb.readAll();
-    return users.some((u) => u.username == username);
+    return users.some(
+      (u) => u.username.toLowerCase() == username.toLowerCase()
+    );
   }
 };
 
-const readUser = function ({ userId }) {
-  if (!userId) {
-    throw new Error("Cannot read user, id must be set.");
-  }
-  if (isNaN(userId)) {
-    throw new Error("Cannot read user, id must be a number.");
-  }
-};
-
-module.exports = { createUser, readUser };
+module.exports = { createUser };

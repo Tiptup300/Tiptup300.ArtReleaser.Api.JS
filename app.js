@@ -6,7 +6,7 @@ var setAppCleanupOnClose = require("./appCleanup");
 var dbConnection = require("./db").dbConnection;
 
 var userRouter = require("./user/userRouter");
-var tokenRouter = require("./token/tokenRouter");
+var authRouter = require("./auth/authRouter");
 
 var app = express();
 
@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/user", userRouter);
-app.use("/token", tokenRouter);
+app.use("/auth", authRouter);
 
 setAppCleanupOnClose();
 
