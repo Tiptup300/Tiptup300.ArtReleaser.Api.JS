@@ -21,8 +21,6 @@ const createUser = async function ({ username, password, email }) {
   });
   let user = await userDb.read({ userId });
 
-  console.log(`userRepo: Created new user (${user.id} - ${user.username})`);
-
   return {
     id: user.id,
     username: user.username,
@@ -42,7 +40,6 @@ const verifyLogin = async function (username, password) {
     .filter((u) => u.username.toLowerCase() === username.toLowerCase())
     .filter((u) => {
       let compareHash = authHelpers.hashPassword(password, u.password_salt);
-      console.log(u, compareHash);
       return compareHash === u.password_hash;
     });
 
