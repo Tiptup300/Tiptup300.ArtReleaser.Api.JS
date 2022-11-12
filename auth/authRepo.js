@@ -2,9 +2,8 @@ const userDb = require("../db").userDb;
 const auth = require("../auth");
 
 const isValidLogin = async function (username, password) {
-  let users = await userDb.readAll();
-  console.log("username:", username);
-  let matchUser = users
+  let matchUser = await userDb
+    .readAll()
     .filter((u) => u.username.toLowerCase() === username.toLowerCase())
     .filter((u) => {
       let compareHash = auth.hashPassword(password, u.password_salt);
