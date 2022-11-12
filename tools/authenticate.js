@@ -8,12 +8,9 @@ async function authenticate(request, response, next) {
   token = token.substring(7);
   try {
     request.authorization = authHelpers.verifyToken(token);
-    return next();
-  } catch {
-    return response
-      .status(401)
-      .send({ error: "The provided token was invalid." });
-  }
+  } catch {}
+
+  return next();
 }
 
 module.exports = authenticate;

@@ -1,4 +1,4 @@
-const userRepo = require("./userRepo");
+const { createUser } = require("./userRepo");
 
 const postUser = async function (request, response) {
   if (
@@ -43,7 +43,7 @@ const postUser = async function (request, response) {
   }
 
   try {
-    let user = await userRepo.createUser({
+    let user = await createUser({
       username,
       password,
       email,

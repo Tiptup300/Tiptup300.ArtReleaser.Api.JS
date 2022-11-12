@@ -1,10 +1,10 @@
 const express = require("express");
-const router = express.Router();
-const authService = require("./authService");
 const authorize = require("../tools/authorize");
+const { getToken, postToken, postLogin } = require("./authService");
 
-router.get("/token", authorize("guest", "user"), authService.getToken);
-router.post("/token", authService.postToken);
-router.post("/login", authService.postLogin);
+const router = express.Router();
+router.get("/token", authorize("guest", "user"), getToken);
+router.post("/token", postToken);
+router.post("/login", postLogin);
 
 module.exports = router;
