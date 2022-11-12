@@ -1,12 +1,17 @@
-const authRepo = require("./authRepo");
-const auth = require("../auth");
-const jwt = require("jsonwebtoken");
+const userRepo = require("../user/userRepo");
+const authHelpers = require("../tools/authHelpers");
+
+const getToken = async function (request, response, next) {
+  if (process.env.NODE_ENV == "production") {
+    return response.status(401).send();
+  }
+  return response.status(200).send(request.authorization);
+};
 
 const postToken = async function (request, response, next) {
-  const token = `Bearer ${auth.signToken({
+  const token = authHelpers.signToken({
     roles: ["guest"],
-    permissions: [""],
-  })}`;
+  });
   return response.status(200).send({ token });
 };
 
@@ -18,14 +23,13 @@ const postLogin = async function (request, response, next) {
   }
   const { username, password } = request.body;
 
-  const { isValid, user } = await authRepo.isValidLogin(username, password);
+  const { isValid, user } = await userRepo.verifyLogin(username, password);
   if (!isValid) {
     return response.sendStatus(401);
   }
-  const token = `Bearer ${auth.signToken({
+  const token = `${authHelpers.signToken({
     user,
     roles: ["user"],
-    permissions: [""],
   })}`;
   return response.status(200).send({ token });
 };
@@ -33,4 +37,5 @@ const postLogin = async function (request, response, next) {
 module.exports = {
   postToken,
   postLogin,
+  getToken,
 };

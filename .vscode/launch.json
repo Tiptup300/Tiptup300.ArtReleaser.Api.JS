@@ -7,11 +7,26 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "normal",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/bin/www"
+            "program": "${workspaceFolder}/bin/www",
+            "env" : {
+                "PORT": "4000"
+            }
+        },{
+            "type": "node",
+            "request": "launch",
+            "name": "nodemon",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
+            "program": "${workspaceFolder}/app.js",
+            "restart": true,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "env" : {
+                "PORT": "4000"
+            }
         }
     ]
 }

@@ -1,5 +1,5 @@
-const userDb = require("../db").userDb;
-const auth = require("../auth");
+const userDb = require("../tools/db").userDb;
+const authHelpers = require("../tools/authHelpers");
 
 const createUser = async function ({ username, password, email }) {
   if (!username || !password || !email) {
@@ -10,8 +10,8 @@ const createUser = async function ({ username, password, email }) {
     throw new Error("Cannot create user, username is already taken.");
   }
 
-  let passwordSalt = auth.generateSalt();
-  let passwordHash = auth.hashPassword(password, passwordSalt);
+  let passwordSalt = authHelpers.generateSalt();
+  let passwordHash = authHelpers.hashPassword(password, passwordSalt);
 
   let userId = await userDb.create({
     username,
@@ -37,4 +37,23 @@ const createUser = async function ({ username, password, email }) {
   }
 };
 
-module.exports = { createUser };
+const verifyLogin = async function (username, password) {
+  let matchUser = (await userDb.readAll())
+    .filter((u) => u.username.toLowerCase() === username.toLowerCase())
+    .filter((u) => {
+      let compareHash = authHelpers.hashPassword(password, u.password_salt);
+      console.log(u, compareHash);
+      return compareHash === u.password_hash;
+    });
+
+  if (matchUser.length < 1) {
+    return { isValid: false };
+  }
+  let user = matchUser[0];
+  return {
+    isValid: true,
+    user: { id: user.id, username: user.username, email: user.email },
+  };
+};
+
+module.exports = { createUser, verifyLogin };

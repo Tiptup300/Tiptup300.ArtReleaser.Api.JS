@@ -2,8 +2,9 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var setAppCleanupOnClose = require("./appCleanup");
-var dbConnection = require("./db").dbConnection;
+var setAppCleanupOnClose = require("./tools/appCleanup");
+var dbConnection = require("./tools/db").dbConnection;
+var authenticate = require("./tools/authenticate");
 
 var userRouter = require("./user/userRouter");
 var authRouter = require("./auth/authRouter");
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(authenticate);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 
