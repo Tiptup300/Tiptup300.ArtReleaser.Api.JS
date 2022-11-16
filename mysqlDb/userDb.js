@@ -1,12 +1,12 @@
-const dbConnection = require("./dbConnection");
+import { query } from "./dbConnection.js";
 
-const create = async function ({
+export async function createUser({
   username,
   passwordHash,
   passwordSalt,
   email,
 }) {
-  let result = await dbConnection.query(
+  let result = await query(
     `
       INSERT INTO users (username, email, password_hash, password_salt) 
       VALUES ( ?, ?, ?, ? );
@@ -15,10 +15,10 @@ const create = async function ({
   );
 
   return result.insertId;
-};
+}
 
-const read = async function ({ userId }) {
-  let result = await dbConnection.query(
+export async function readUser({ userId }) {
+  let result = await query(
     `
       SELECT id, username, email, password_hash, password_salt 
       FROM users
@@ -28,10 +28,10 @@ const read = async function ({ userId }) {
   );
 
   return result[0];
-};
+}
 
-const readAll = async function () {
-  let result = await dbConnection.query(
+export async function readAllUsers() {
+  let result = await query(
     `
         SELECT id, username, email, password_hash, password_salt
         FROM users
@@ -39,10 +39,4 @@ const readAll = async function () {
   );
 
   return result;
-};
-
-module.exports = {
-  create,
-  read,
-  readAll,
-};
+}

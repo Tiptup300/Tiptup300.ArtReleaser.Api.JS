@@ -1,9 +1,15 @@
-const dbType = "mysqlDb";
+import {
+  EndDatabaseConnection,
+  query,
+  StartDatabaseConnection,
+} from "../mysqlDb/dbConnection.js";
+import { createUser, readAllUsers, readUser } from "../mysqlDb/userDb.js";
 
-const userDb = require(`../${dbType}/userDb`);
-const dbConnection = require(`../${dbType}/dbConnection`);
-
-module.exports = {
-  userDb,
-  dbConnection,
+export {
+  readUser,
+  readAllUsers,
+  createUser,
+  StartDatabaseConnection,
+  query,
+  EndDatabaseConnection,
 };

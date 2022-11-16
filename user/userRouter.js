@@ -1,8 +1,7 @@
-const express = require("express");
-const authorize = require("../tools/authorize");
-const { postUser } = require("./userService");
+import express from "express";
+import Authorize from "../tools/authorize.js";
+import { postUser } from "./userService.js";
 
 var router = express.Router();
-router.post("/", authorize("guest"), postUser);
-
-module.exports = router;
+router.post("/", Authorize("guest"), postUser);
+export default router;

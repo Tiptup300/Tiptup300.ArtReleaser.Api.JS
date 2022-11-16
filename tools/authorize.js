@@ -1,4 +1,4 @@
-const authorize = function (...permittedRoles) {
+export default function Authorize(...permittedRoles) {
   return (request, response, next) => {
     const { authorization } = request;
 
@@ -13,6 +13,4 @@ const authorize = function (...permittedRoles) {
       response.status(403).json({ message: "Forbidden" });
     }
   };
-};
-
-module.exports = authorize;
+}

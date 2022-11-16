@@ -1,10 +1,10 @@
-const dbConnection = require("./db").dbConnection;
+import { EndDatabaseConnection } from "../tools/db.js";
 
-const setAppCleanupOnClose = function () {
+export default function setAppCleanupOnClose() {
   process.stdin.resume(); //so the program will not close instantly
 
   function exitHandler(options, exitCode) {
-    dbConnection.close();
+    EndDatabaseConnection();
     if (exitCode || exitCode === 0) console.log(`Exit Code: '${exitCode}'`);
     if (options.exit) process.exit();
   }
@@ -18,6 +18,4 @@ const setAppCleanupOnClose = function () {
   // catches "kill pid" (for example: nodemon restart)
   process.on("SIGUSR1", exitHandler.bind(null, { exit: true }));
   process.on("SIGUSR2", exitHandler.bind(null, { exit: true }));
-};
-
-module.exports = setAppCleanupOnClose;
+}

@@ -1,8 +1,8 @@
-const express = require("express");
-const authorize = require("../tools/authorize");
-const { initConfig } = require("./configService");
+import express from "express";
+import Authorize from "../tools/authorize.js";
+import { initConfig } from "./configService.js";
 
 const router = express.Router();
-router.post("/init", authorize("admin"), initConfig);
+router.post("/init", Authorize("admin"), initConfig);
 
-module.exports = router;
+export default router;

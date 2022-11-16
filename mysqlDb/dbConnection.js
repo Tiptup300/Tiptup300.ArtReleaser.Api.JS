@@ -1,8 +1,8 @@
-const mysql = require("mysql");
+import mysql from "mysql";
 
 let connection;
 
-const start = function () {
+export function StartDatabaseConnection() {
   connection = mysql.createConnection({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
@@ -11,9 +11,9 @@ const start = function () {
   });
   connection.connect();
   console.log("Connection to mysql started.");
-};
+}
 
-const query = (qry, params) => {
+export function query(qry, params) {
   return new Promise((resolve, reject) => {
     connection.query(qry, params ? params : [], (error, rows, fields) => {
       if (error) {
@@ -23,19 +23,13 @@ const query = (qry, params) => {
       }
     });
   });
-};
+}
 
-const close = function () {
+export function EndDatabaseConnection() {
   if (!connection) {
     return;
   }
   connection.end();
   connection = null;
   console.log("Connection to mysql ended.");
-};
-
-module.exports = {
-  start,
-  query,
-  close,
-};
+}

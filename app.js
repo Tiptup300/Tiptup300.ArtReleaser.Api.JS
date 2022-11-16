@@ -1,29 +1,22 @@
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var setAppCleanupOnClose = require("./tools/appCleanup");
-var { dbConnection } = require("./tools/db");
-var authenticate = require("./tools/authenticate");
+import cookieParser from "cookie-parser";
+import express from "express";
+import logger from "morgan";
+import Authenticate from "./tools/authenticate.js";
 
-var userRouter = require("./user/userRouter");
-var authRouter = require("./auth/authRouter");
-var configRouter = require("./config/configRouter");
+import authRouter from "./auth/authRouter.js";
+import configRouter from "./config/configRouter.js";
+import userRouter from "./user/userRouter.js";
 
-var app = express();
+const app = express();
 
-dbConnection.start();
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-//app.use(express.static(path.join(__dirname, "public")));
 
-app.use(authenticate);
+app.use(Authenticate);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/config", configRouter);
 
-setAppCleanupOnClose();
-
-module.exports = app;
+export default app;

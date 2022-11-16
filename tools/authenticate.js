@@ -1,16 +1,14 @@
-const authHelpers = require("./authHelpers");
+import { VerifyAuthenticationToken } from "./authHelpers.js";
 
-async function authenticate(request, response, next) {
+export default async function Authenticate(request, response, next) {
   let token = request.headers["authorization"];
   if (!token || !token.startsWith("Bearer ") || token == "Bearer null") {
     return next();
   }
   token = token.substring(7);
   try {
-    request.authorization = authHelpers.verifyToken(token);
+    request.authorization = VerifyAuthenticationToken(token);
   } catch {}
 
   return next();
 }
-
-module.exports = authenticate;

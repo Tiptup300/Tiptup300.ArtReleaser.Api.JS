@@ -1,6 +1,6 @@
-const { createUser } = require("./userRepo");
+import { createUser } from "./userRepo.js";
 
-const postUser = async function (request, response) {
+export async function postUser(request, response) {
   if (
     !request.body ||
     !request.body.username ||
@@ -54,8 +54,4 @@ const postUser = async function (request, response) {
       error: `An error occured creating the user: ${ex.message}`,
     });
   }
-};
-
-module.exports = {
-  postUser,
-};
+}

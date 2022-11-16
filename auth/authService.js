@@ -1,21 +1,21 @@
-const userRepo = require("../user/userRepo");
-const authHelpers = require("../tools/authHelpers");
+import { SignAuthenticationToken } from "../tools/authHelpers.js";
+import { verifyLogin } from "../user/userRepo.js";
 
-const getToken = async function (request, response, next) {
+export async function getToken(request, response, next) {
   if (process.env.NODE_ENV == "production") {
     return response.status(401).send();
   }
   return response.status(200).send(request.authorization);
-};
+}
 
-const postToken = async function (request, response, next) {
-  const token = authHelpers.signToken({
+export async function postToken(request, response, next) {
+  const token = SignAuthenticationToken({
     roles: ["guest"],
   });
   return response.status(200).send({ token });
-};
+}
 
-const postLogin = async function (request, response, next) {
+export async function postLogin(request, response, next) {
   if (!request.body || !request.body.username || !request.body.password) {
     return response.status(401).send({
       error: "A username & password must be specified.",
@@ -23,19 +23,13 @@ const postLogin = async function (request, response, next) {
   }
   const { username, password } = request.body;
 
-  const { isValid, user } = await userRepo.verifyLogin(username, password);
+  const { isValid, user } = await verifyLogin(username, password);
   if (!isValid) {
     return response.sendStatus(401);
   }
-  const token = `${authHelpers.signToken({
+  const token = `${SignAuthenticationToken({
     user,
     roles: ["user"],
   })}`;
   return response.status(200).send({ token });
-};
-
-module.exports = {
-  postToken,
-  postLogin,
-  getToken,
-};
+}

@@ -1,15 +1,13 @@
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
-// authentication
-const generateSalt = function () {
+export function GeneratePasswordSalt() {
   return crypto
     .randomBytes(parseInt(process.env.PASSWORD_SALT_LENGTH))
     .toString("hex");
-};
+}
 
-// authentication
-const hashPassword = function (password, salt) {
+export function HashPassword(password, salt) {
   return crypto
     .pbkdf2Sync(
       password,
@@ -19,28 +17,18 @@ const hashPassword = function (password, salt) {
       "sha512"
     )
     .toString("hex");
-};
+}
 
-// authentication
-const signToken = function (body) {
+export function SignAuthenticationToken(body) {
   return jwt.sign(body, getEncodedTokenSecret(), {
     expiresIn: process.env.TOKEN_EXPIRATION,
   });
-};
+}
 
-// authenticatino
-const verifyToken = function (token) {
+export function VerifyAuthenticationToken(token) {
   return jwt.verify(token, getEncodedTokenSecret());
-};
+}
 
-// authentication
 function getEncodedTokenSecret() {
   return Buffer.from(process.env.TOKEN_SECRET).toString("base64");
 }
-
-module.exports = {
-  generateSalt,
-  hashPassword,
-  signToken,
-  verifyToken,
-};

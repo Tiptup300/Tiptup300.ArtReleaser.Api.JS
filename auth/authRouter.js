@@ -1,10 +1,10 @@
-const express = require("express");
-const authorize = require("../tools/authorize");
-const { getToken, postToken, postLogin } = require("./authService");
+import express from "express";
+import Authorize from "../tools/authorize.js";
+import { getToken, postLogin, postToken } from "./authService.js";
 
 const router = express.Router();
-router.get("/token", authorize("guest", "user"), getToken);
+router.get("/token", Authorize("guest", "user"), getToken);
 router.post("/token", postToken);
 router.post("/login", postLogin);
 
-module.exports = router;
+export default router;

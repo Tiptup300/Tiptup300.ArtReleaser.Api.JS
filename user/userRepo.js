@@ -1,7 +1,11 @@
-const userDb = require("../tools/db").userDb;
-const authHelpers = require("../tools/authHelpers");
+import { GeneratePasswordSalt, HashPassword } from "../tools/authHelpers.js";
+import {
+  createUser as dbCreateUser,
+  readAllUsers,
+  readUser,
+} from "../tools/db.js";
 
-const createUser = async function ({ username, password, email }) {
+export async function createUser({ username, password, email }) {
   if (!username || !password || !email) {
     throw new Error("Cannot create user, all parameters must be completed.");
   }
@@ -10,16 +14,16 @@ const createUser = async function ({ username, password, email }) {
     throw new Error("Cannot create user, username is already taken.");
   }
 
-  let passwordSalt = authHelpers.generateSalt();
-  let passwordHash = authHelpers.hashPassword(password, passwordSalt);
+  let passwordSalt = GeneratePasswordSalt();
+  let passwordHash = HashPassword(password, passwordSalt);
 
-  let userId = await userDb.create({
+  let userId = await dbCreateUser({
     username,
     passwordHash,
     passwordSalt,
     email,
   });
-  let user = await userDb.read({ userId });
+  let user = await readUser({ userId });
 
   return {
     id: user.id,
@@ -28,18 +32,18 @@ const createUser = async function ({ username, password, email }) {
   };
 
   async function isUsernameTaken(username) {
-    let users = await userDb.readAll();
+    let users = await readAllUsers();
     return users.some(
       (u) => u.username.toLowerCase() == username.toLowerCase()
     );
   }
-};
+}
 
-const verifyLogin = async function (username, password) {
-  let matchUser = (await userDb.readAll())
+export async function verifyLogin(username, password) {
+  let matchUser = (await readAllUsers())
     .filter((u) => u.username.toLowerCase() === username.toLowerCase())
     .filter((u) => {
-      let compareHash = authHelpers.hashPassword(password, u.password_salt);
+      let compareHash = HashPassword(password, u.password_salt);
       return compareHash === u.password_hash;
     });
 
@@ -51,6 +55,4 @@ const verifyLogin = async function (username, password) {
     isValid: true,
     user: { id: user.id, username: user.username, email: user.email },
   };
-};
-
-module.exports = { createUser, verifyLogin };
+}
