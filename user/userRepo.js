@@ -1,4 +1,4 @@
-import { g, hashPassword } from "../tools/authHelpers.js";
+import { generatePasswordHash } from "../tools/authHelpers.js";
 import {
   createUser as dbCreateUser,
   readAllUsers,
@@ -14,13 +14,12 @@ export async function createUser({ username, password, email }) {
     throw new Error("Cannot create user, username is already taken.");
   }
 
-  let passwordSalt = g();
-  let passwordHash = hashPassword(password, passwordSalt);
+  let { salt, passwordHash } = generatePasswordHash(password);
 
   let userId = await dbCreateUser({
     username,
     passwordHash,
-    passwordSalt,
+    passwordSalt: salt,
     email,
   });
   let user = await readUser({ userId });
