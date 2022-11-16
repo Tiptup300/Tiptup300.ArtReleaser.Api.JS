@@ -1,4 +1,4 @@
-import { GeneratePasswordSalt, HashPassword } from "../tools/authHelpers.js";
+import { g, hashPassword } from "../tools/authHelpers.js";
 import {
   createUser as dbCreateUser,
   readAllUsers,
@@ -14,8 +14,8 @@ export async function createUser({ username, password, email }) {
     throw new Error("Cannot create user, username is already taken.");
   }
 
-  let passwordSalt = GeneratePasswordSalt();
-  let passwordHash = HashPassword(password, passwordSalt);
+  let passwordSalt = g();
+  let passwordHash = hashPassword(password, passwordSalt);
 
   let userId = await dbCreateUser({
     username,
@@ -43,7 +43,7 @@ export async function verifyLogin(username, password) {
   let matchUser = (await readAllUsers())
     .filter((u) => u.username.toLowerCase() === username.toLowerCase())
     .filter((u) => {
-      let compareHash = HashPassword(password, u.password_salt);
+      let compareHash = hashPassword(password, u.password_salt);
       return compareHash === u.password_hash;
     });
 

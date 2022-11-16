@@ -1,4 +1,4 @@
-import { SignAuthenticationToken } from "../tools/authHelpers.js";
+import { signAuthenticationToken } from "../tools/authHelpers.js";
 import { verifyLogin } from "../user/userRepo.js";
 
 export async function getToken(request, response, next) {
@@ -9,7 +9,7 @@ export async function getToken(request, response, next) {
 }
 
 export async function postToken(request, response, next) {
-  const token = SignAuthenticationToken({
+  const token = signAuthenticationToken({
     roles: ["guest"],
   });
   return response.status(200).send({ token });
@@ -27,7 +27,7 @@ export async function postLogin(request, response, next) {
   if (!isValid) {
     return response.sendStatus(401);
   }
-  const token = `${SignAuthenticationToken({
+  const token = `${signAuthenticationToken({
     user,
     roles: ["user"],
   })}`;

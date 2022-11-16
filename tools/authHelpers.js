@@ -1,13 +1,13 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-export function GeneratePasswordSalt() {
+export function generatePasswordSalt() {
   return crypto
     .randomBytes(parseInt(process.env.PASSWORD_SALT_LENGTH))
     .toString("hex");
 }
 
-export function HashPassword(password, salt) {
+export function hashPassword(password, salt) {
   return crypto
     .pbkdf2Sync(
       password,
@@ -19,13 +19,13 @@ export function HashPassword(password, salt) {
     .toString("hex");
 }
 
-export function SignAuthenticationToken(body) {
+export function signAuthenticationToken(body) {
   return jwt.sign(body, getEncodedTokenSecret(), {
     expiresIn: process.env.TOKEN_EXPIRATION,
   });
 }
 
-export function VerifyAuthenticationToken(token) {
+export function verifyAuthenticationToken(token) {
   return jwt.verify(token, getEncodedTokenSecret());
 }
 
