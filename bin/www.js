@@ -8,8 +8,8 @@ import { StartDatabaseConnection } from "../tools/db.js";
 
 setDevOrProduction();
 StartDatabaseConnection();
-createServer();
 setAppCleanupOnClose();
+createServer();
 
 function setDevOrProduction() {
   if (process.env.NODE_ENV !== "production") {
