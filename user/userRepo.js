@@ -1,9 +1,5 @@
+import { user as userDb } from "../db/index.js";
 import { generatePasswordHash } from "../tools/authHelpers.js";
-import {
-  createUser as dbCreateUser,
-  readAllUsers,
-  readUser,
-} from "../tools/db.js";
 
 export async function createUser({ username, password, email }) {
   if (!username || !password || !email) {
@@ -16,7 +12,7 @@ export async function createUser({ username, password, email }) {
 
   let { salt, passwordHash } = generatePasswordHash(password);
 
-  let userId = await dbCreateUser({
+  let userId = await userDb.createUser({
     username,
     passwordHash,
     passwordSalt: salt,
@@ -31,7 +27,7 @@ export async function createUser({ username, password, email }) {
   };
 
   async function isUsernameTaken(username) {
-    let users = await readAllUsers();
+    let users = await userDb.readAllUsers();
     return users.some(
       (u) => u.username.toLowerCase() == username.toLowerCase()
     );
@@ -39,7 +35,7 @@ export async function createUser({ username, password, email }) {
 }
 
 export async function verifyLogin(username, password) {
-  let matchUser = (await readAllUsers())
+  let matchUser = (await userDb.readAllUsers())
     .filter((u) => u.username.toLowerCase() === username.toLowerCase())
     .filter((u) => {
       let compareHash = hashPassword(password, u.password_salt);

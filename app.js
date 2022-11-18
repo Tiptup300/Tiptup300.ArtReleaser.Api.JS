@@ -1,10 +1,10 @@
 import cookieParser from "cookie-parser";
 import express from "express";
 import logger from "morgan";
-import authRouter from "./auth/authRouter.js";
-import configRouter from "./config/configRouter.js";
-import authenticate from "./tools/authenticate.js";
-import userRouter from "./user/userRouter.js";
+import authenticate from "./middleware/authenticateMiddleware.js";
+import authRouter from "./routers/authRouter.js";
+import configRouter from "./routers/configRouter.js";
+import userRouter from "./routers/userRouter.js";
 
 const app = express();
 app.use(logger("dev"));

@@ -1,4 +1,4 @@
-export default function Authorize(...permittedRoles) {
+export default function authorize(...permittedRoles) {
   return (request, response, next) => {
     const { authorization } = request;
 

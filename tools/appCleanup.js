@@ -1,10 +1,10 @@
-import { EndDatabaseConnection } from "../tools/db.js";
+import { connection } from "../db/index.js";
 
 export default function setAppCleanupOnClose() {
   process.stdin.resume(); //so the program will not close instantly
 
   function exitHandler(options, exitCode) {
-    EndDatabaseConnection();
+    connection.end();
     if (exitCode || exitCode === 0) console.log(`Exit Code: '${exitCode}'`);
     if (options.exit) process.exit();
   }

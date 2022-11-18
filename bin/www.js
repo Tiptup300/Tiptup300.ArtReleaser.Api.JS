@@ -3,11 +3,11 @@ import debug from "debug";
 import dotenv from "dotenv";
 import http from "http";
 import app from "../app.js";
+import { connection } from "../db/index.js";
 import setAppCleanupOnClose from "../tools/appCleanup.js";
-import { StartDatabaseConnection } from "../tools/db.js";
 
 setDevOrProduction();
-StartDatabaseConnection();
+connection.start();
 setAppCleanupOnClose();
 createServer();
 

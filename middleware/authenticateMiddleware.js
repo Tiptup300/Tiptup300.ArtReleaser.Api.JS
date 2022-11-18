@@ -1,4 +1,4 @@
-import { verifyAuthenticationToken } from "./authHelpers.js";
+import { verifyAuthenticationToken } from "../tools/authHelpers.js";
 
 export default async function authenticate(request, response, next) {
   let token = request.headers["authorization"];
