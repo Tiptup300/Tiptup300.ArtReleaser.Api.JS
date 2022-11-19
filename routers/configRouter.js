@@ -1,8 +1,8 @@
 import express from "express";
-import { initConfig } from "../config/configService.js";
 import authorize from "../middleware/authorizeMiddleware.js";
+import configService from "../services/config/index.js";
 
 const router = express.Router();
-router.post("/init", authorize("admin"), initConfig);
+router.post("/init", authorize("admin"), configService.initConfig);
 
 export default router;

@@ -1,6 +1,4 @@
-import { createUser } from "./userRepo.js";
-
-export async function postUser(request, response) {
+export default async function postUser(request, response) {
   if (
     !request.body ||
     !request.body.username ||
@@ -43,7 +41,7 @@ export async function postUser(request, response) {
   }
 
   try {
-    let user = await createUser({
+    let user = await userDb.createUser({
       username,
       password,
       email,

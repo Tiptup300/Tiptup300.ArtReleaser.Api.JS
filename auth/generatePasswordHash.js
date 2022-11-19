@@ -1,7 +1,6 @@
 import crypto from "crypto";
-import jwt from "jsonwebtoken";
 
-export function generatePasswordHash(password) {
+export default function generatePasswordHash(password) {
   let salt = generatePasswordSalt();
   let passwordHash = hashPassword(password, salt);
   return { salt, passwordHash };
@@ -23,18 +22,4 @@ export function generatePasswordHash(password) {
       )
       .toString("hex");
   }
-}
-
-export function signAuthenticationToken(body) {
-  return jwt.sign(body, getEncodedTokenSecret(), {
-    expiresIn: process.env.TOKEN_EXPIRATION,
-  });
-}
-
-export function verifyAuthenticationToken(token) {
-  return jwt.verify(token, getEncodedTokenSecret());
-}
-
-function getEncodedTokenSecret() {
-  return Buffer.from(process.env.TOKEN_SECRET).toString("base64");
 }

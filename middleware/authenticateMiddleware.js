@@ -1,4 +1,4 @@
-import { verifyAuthenticationToken } from "../tools/authHelpers.js";
+import auth from "../auth/index.js";
 
 export default async function authenticate(request, response, next) {
   let token = request.headers["authorization"];
@@ -7,7 +7,7 @@ export default async function authenticate(request, response, next) {
   }
   token = token.substring(7);
   try {
-    request.authorization = verifyAuthenticationToken(token);
+    request.authorization = auth.verifyAuthenticationToken(token);
   } catch {}
 
   return next();
