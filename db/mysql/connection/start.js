@@ -1,5 +1,5 @@
 import mysql from "mysql";
-import connectionState from "./_state.js";
+import connectionState from "./connectionState.js";
 
 export default function start() {
   let connection = mysql.createConnection({

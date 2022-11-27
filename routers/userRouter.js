@@ -1,5 +1,5 @@
 import express from "express";
-import authorize from "../middleware/authorizeMiddleware.js";
+import authorize from "../middleware/authorize.js";
 import userService from "../services/user/index.js";
 
 var router = express.Router();

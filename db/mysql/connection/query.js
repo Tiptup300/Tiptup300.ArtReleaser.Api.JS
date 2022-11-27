@@ -1,4 +1,4 @@
-import connectionState from "./_state.js";
+import connectionState from "./connectionState.js";
 
 export default function query(qry, params) {
   return new Promise((resolve, reject) => {
